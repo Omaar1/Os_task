@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1521120859 source:f:\data structure & algorithms\os_task\main.cpp
+	<iostream>
+	<stdlib.h>
+
