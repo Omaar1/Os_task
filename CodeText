@@ -3,11 +3,14 @@
 
 using namespace std;
 void fifo();
+void optimal();
+
 
 int frames=3 , pages = 7 , squence = 22;
 int* frameArray ;
-int* pageArray ;
 int* squenceArray ;
+//int squenceArray []={7,0,1,2,0,3,0,4,2,3,0,3,2,1,2,0,1,7,0,1};
+
 int main()
 {
     cout << "Enter no. of Frames   :  "; cin>>frames ;
@@ -19,21 +22,20 @@ int main()
     frameArray = new int[frames];
     for(int i=0;i<frames ; i++) frameArray[i]=99;
 
-//   pageArray = new int[pages];
-//  for(int i=0;i<pages ; i++) pageArray[i]=0;
+
 
     squenceArray = new int[squence];
     for(int i=0;i<squence ; i++) squenceArray[i]= (rand()%pages);
-
     cout<<"frame array :"; for(int i=0; i<frames ; i++) cout<<frameArray[i]<<"  "; cout<<endl;
     cout<<"sequence array :"; for(int i=0;i<squence ; i++) cout<<squenceArray[i]<<"  "; cout<<"\n\n\n";
-    fifo();
+    optimal();
+    //fifo();
+
     return 0;
 }
 
 
 ///FiFo
-
 void fifo(){
     int oldest=0 , missCount=0 , enter=0 , COUNTER=1 ,flag=0;
     do{
@@ -51,6 +53,7 @@ void fifo(){
             cout<<endl;
             missCount++;
         }
+
        else{
             cout<<(COUNTER)<<"     "<<endl;
         }
@@ -59,8 +62,7 @@ void fifo(){
         enter++;
         flag=0;
     }while(enter<squence);
-    
- cout<<"miss count : "<<missCount<<endl;
+    cout<<"miss count : "<<missCount<<endl;
 }
 
 
@@ -125,4 +127,3 @@ void optimal(){
     cout<<"miss count : "<<missCount<<endl<<endl;
 
 }
-    
