@@ -59,3 +59,70 @@ void fifo(){
         enter++;
         flag=0;
     }while(enter<squence);
+    
+ cout<<"miss count : "<<missCount<<endl;
+}
+
+
+///Optimal !
+void optimal(){
+    int enter=0,flag=0,farIndex=-1,farNum=99,missCount=0,COUNTER=1 , j , toremove;
+
+    do{
+        for(int i=0;i<frames;i++){
+            if(squenceArray[enter] == frameArray[i] ){
+                    flag=1;
+                    break;  // ifnum already exist continue
+            }
+        }
+        if(enter<frames && flag==0 ){
+                frameArray[missCount]=squenceArray[enter];
+                missCount++;
+                cout<<(COUNTER)<<"     "; for(int i=0;i<3;i++) cout<<frameArray[i]<<"  ";
+                cout<<endl;
+        }
+
+        else{
+            if(flag==0){
+                for(int i=0 ; i<frames ; i++){
+                    int found = 0 ;
+                    for( j=enter+1 ; j<squence ; j++){
+                        //cout<<" i : "<<i<<"\t, j : "<<j<<"\t, farIndex : "<<farIndex<<endl;
+                        if(frameArray[i]==squenceArray[j]){
+                            found = 1 ;
+                            if(j>farIndex){
+                                farIndex = j;
+                                //cout<<"\t  farIndexChanged";
+                                farNum = squenceArray[j] ;
+                                toremove = i ;
+                            }
+                            break ;
+                        }
+                    }
+                    if(found == 0) {
+                        toremove=i ;
+                        //cout<<"\tNotFound !! \n";
+                        break;
+                    }
+                }
+            // at the end of the loop i have the index to be removed !!
+            frameArray[toremove]=squenceArray[enter] ;
+            cout<<(COUNTER)<<"     "; for(int i=0;i<3;i++) cout<<frameArray[i]<<"  ";
+            cout<<endl;
+            missCount++;
+            }
+
+            else{
+                cout<<(COUNTER)<<"     "<<endl;
+            }
+        }
+        enter++;
+        COUNTER++;
+        flag=0;
+        farIndex = -1;
+
+    }while(enter<squence);
+    cout<<"miss count : "<<missCount<<endl<<endl;
+
+}
+    
