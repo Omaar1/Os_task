@@ -2,14 +2,18 @@
 #include <stdlib.h>
 
 using namespace std;
+
 void fifo();
 void optimal();
 void lru();
+void secondChance();
+void lfu();
+void mfu();
 
 int frames=3 , pages = 7 , squence = 22;
 int* frameArray ;
-int* squenceArray ;
-//int squenceArray []={7,0,1,2,0,3,0,4,2,3,0,3,2,1,2,0,1,7,0,1};
+//int* squenceArray ;
+int squenceArray []={0,4,1,4,2,4,3,4,2,4,0,4,1,4,2,4,3,4};
 
 int main()
 {
@@ -24,18 +28,47 @@ int main()
 
 
 
-    squenceArray = new int[squence];
-    for(int i=0;i<squence ; i++) squenceArray[i]= (rand()%pages);
+//    squenceArray = new int[squence];
+//for(int i=0;i<squence ; i++) squenceArray[i]= (rand()%pages);
     cout<<"frame array :"; for(int i=0; i<frames ; i++) cout<<frameArray[i]<<"  "; cout<<endl;
     cout<<"sequence array :"; for(int i=0;i<squence ; i++) cout<<squenceArray[i]<<"  "; cout<<"\n\n\n";
+    cout<<" \n\n\*\*\*\*\*\* Optimal method \*\*\*\*\*\*\n";
     optimal();
-    //fifo();
-  //  lru();
+
+
+    /// initialize arrays -->>
+    frameArray = new int[frames];
+    for(int i=0;i<frames ; i++) frameArray[i]=99;
+
+    cout<<" \n\n\*\*\*\*\*\* FIFO method \*\*\*\*\*\*\n";
+    fifo();
+
+    /// initialize arrays -->>
+    frameArray = new int[frames];
+    for(int i=0;i<frames ; i++) frameArray[i]=99;
+
+    cout<<" \n\n\*\*\*\*\*\* LRU method \*\*\*\*\*\*\n";
+    lru();
+
+
+    /// initialize arrays -->>
+    frameArray = new int[frames];
+    for(int i=0;i<frames ; i++) frameArray[i]=99;
+
+    cout<<" \n\n\*\*\*\*\*\* SecondChance method \*\*\*\*\*\*\n";
+    secondChance();
+
+      /// initialize arrays -->>
+    frameArray = new int[frames];
+    for(int i=0;i<frames ; i++) frameArray[i]=99;
+
+    cout<<" \n\n\*\*\*\*\*\* MFU method \*\*\*\*\*\*\n";
+    mfu();
     return 0;
 }
 
 
-///FiFo
+///First in First out
 void fifo(){
 
     int oldest=0 , missCount=0 , enter=0 , COUNTER=1 ,flag=0;
@@ -50,7 +83,7 @@ void fifo(){
        if(flag==0){
             frameArray[oldest]=squenceArray[enter] ;
             oldest=(oldest+1)%frames;
-            cout<<(COUNTER)<<"     "; for(int i=0;i<3;i++) cout<<frameArray[i]<<"  ";
+            cout<<(COUNTER)<<"     "; for(int i=0;i<frames;i++) cout<<frameArray[i]<<"  ";
             cout<<endl;
             missCount++;
         }
@@ -81,7 +114,7 @@ void optimal(){
         if(enter<frames && flag==0 ){
                 frameArray[missCount]=squenceArray[enter];
                 missCount++;
-                cout<<(COUNTER)<<"     "; for(int i=0;i<3;i++) cout<<frameArray[i]<<"  ";
+                cout<<(COUNTER)<<"     "; for(int i=0;i<frames;i++) cout<<frameArray[i]<<"  ";
                 cout<<endl;
         }
 
@@ -110,7 +143,7 @@ void optimal(){
                 }
             // at the end of the loop i have the index to be removed !!
             frameArray[toremove]=squenceArray[enter] ;
-            cout<<(COUNTER)<<"     "; for(int i=0;i<3;i++) cout<<frameArray[i]<<"  ";
+            cout<<(COUNTER)<<"     "; for(int i=0;i<frames;i++) cout<<frameArray[i]<<"  ";
             cout<<endl;
             missCount++;
             }
@@ -128,6 +161,7 @@ void optimal(){
     cout<<"miss count : "<<missCount<<endl<<endl;
 }
 
+///least recently used
 void lru(){
     int enter=0 , flag=0,farIndex=99,farNum=99,missCount=0,COUNTER=1 , j , toremove;;
     do{
@@ -161,7 +195,7 @@ void lru(){
                 }
             }
             frameArray[toremove]=squenceArray[enter] ;
-            cout<<(COUNTER)<<"     "; for(int i=0;i<3;i++) cout<<frameArray[i]<<"  ";
+            cout<<(COUNTER)<<"     "; for(int i=0;i<frames;i++) cout<<frameArray[i]<<"  ";
             cout<<endl;
             missCount++;
             }
@@ -176,3 +210,174 @@ void lru(){
     }while(enter<squence);
     cout<<"miss count : "<<missCount<<endl;
 }
+
+///least frequently used
+void lfu(){
+    int miss=0;
+    int m, n, page, flag, k, minimum_time, temp,total_miss;
+    //............ intialize array that contain the number of times pages' numbers have been used !!
+    int *arr;
+    arr = new int[pages];
+    for(int i=0;i<pages ; i++) arr[i]=0;
+    //........... intialize array that contain the last time a page has been used!!
+    int *t;
+    t = new int[pages];
+     for(m = 0; m < squence; m++)
+      {
+            arr[squenceArray[m]]++;
+            t[squenceArray[m]] = m;
+            flag = 1;
+            k = frameArray[0];
+            for(n = 0; n < frames; n++)
+            {
+                  if(frameArray[n] == 99 || frameArray[n] == squenceArray[m])
+                  {
+                        if(frameArray[n] != 99)
+                        {
+                              miss++;
+                        }
+                        flag = 0;
+                        frameArray[n] = squenceArray[m]; //.......lw msh mwgod wel mkan fel frame fady b7ot el page
+                        break;
+                  }
+                  if(arr[k] > arr[frameArray[n]]) //.........hna lw el frame kollo malyan .. bshof el number used how many times w a2l wa7d used b7oto f "k"
+                  {
+                        k = frameArray[n];
+                  }
+            }
+            if(flag)
+            {
+                  minimum_time = squence;
+                  for(n = 0; n < frames; n++)
+                  {
+                        if(arr[frameArray[n]] == arr[k] && t[frameArray[n]] < minimum_time) //.......... hna bshof lw el feh 2 numbers in the frames are used equall number of times so ha5od a5r wa7d est5dmto
+                        {
+                              temp = n;
+                              minimum_time = t[frameArray[n]];
+                        }
+                  }
+                  arr[frameArray[temp]] = 0;
+                  frameArray[temp] = squenceArray[m];
+                  }
+             for(n = 0; n < frames; n++)
+            {
+                cout<<frameArray[n] << "\t";  //printf("%d\t", frame[n]);
+            }
+            cout<<"\n";
+      }
+      total_miss = squence-miss ; //........... el "miss" hna hwa number of times ely m7slsh ta8yer fel frames
+      cout<<"total miss= " << total_miss;
+}
+
+
+
+void secondChance( ){
+    int missCount=0,enter =0, COUNTER=1, index=0;
+    int* flag ;
+    flag = new int[frames];
+    for(int i=0; i<frames ; i++) flag[i]=0;
+    cout<<"flag array :";
+    for(int i=0; i<frames ; i++) cout<<flag[i]<<"  ";cout<<endl;
+    int found = 0 ;
+
+        do{
+            for(int i=0;i<frames;i++){
+                if(squenceArray[enter] == frameArray[i] ){
+                    flag[i] = 1 ;
+                    found = 1 ;
+                    break;
+                }
+            }
+            if(found == 1){
+                cout<<(COUNTER)<<"                  flags:  ";
+                for(int i=0; i<frames ; i++) cout<<flag[i]<<"  ";
+                cout<<endl;
+                enter++;
+                COUNTER++;
+                found=0;
+                continue;
+            }
+            else{
+                while(flag[index] == 1){
+                    flag[index]=0;
+                    index=(index+1)%frames;
+                    //cout<<"indexxxxxxxxxxx =  "<<index<<endl;
+                }
+                frameArray[index] = squenceArray[enter];
+                index=(index+1)%frames;
+                cout<<(COUNTER)<<"     ";
+                for(int i=0; i<frames; i++) cout<<frameArray[i]<<"  ";
+                cout<<"   flags:  ";
+                for(int i=0; i<frames ; i++) cout<<flag[i]<<"  ";
+                cout<<endl;
+            }
+            enter++;
+            COUNTER++;
+            found=0;
+            missCount++;
+        }while(enter<squence);
+    cout<<"miss count : "<<missCount<<endl;
+}
+
+
+void mfu(){
+    int miss=0;
+    int m, n, page, flag, k, max_time, temp,total_miss,f;
+    //intialize array that contain the number of times pages' numbers have been used !!
+    int *arr;
+    arr = new int[pages];
+    for(int i=0;i<pages ; i++) arr[i]=0;
+    //intialize array that contain the last time a page has been used!!
+    int *t;
+    t = new int[pages];
+     for(m = 0; m < squence; m++)
+      {
+            f=1;
+            arr[squenceArray[m]]++;
+            t[squenceArray[m]] = m;
+            flag = 1;
+            k = frameArray[0];
+            for(n = 0; n < frames; n++) {
+                  if(frameArray[n] == 99 || frameArray[n] == squenceArray[m])
+                  {
+                        if(frameArray[n] != 99)
+                        {
+                                f=0;
+                              miss++;
+                        }
+                        flag = 0;
+                        frameArray[n] = squenceArray[m]; //if the page exist increase counter;
+                        break;
+                  }
+                  if(arr[k] < arr[frameArray[n]]) //find the most frequent page, iterating through count[]
+                  {
+                        k = frameArray[n];
+                  }
+            }
+            if(flag)
+            {
+                  max_time = squence;
+                  for(n = 0; n < frames; n++)
+                  {
+                        if(arr[frameArray[n]] == arr[k] && t[frameArray[n]] < max_time) //if the two numbers are exist i will choose last number i replaced it
+                        {
+                              temp = n;
+                              max_time = t[frameArray[n]];
+                        }
+                  }
+                  arr[frameArray[temp]] = 0;
+                  frameArray[temp] = squenceArray[m];
+                  }
+                  if(f){
+             for(n = 0; n < frames; n++)
+            {
+                cout<<frameArray[n] << "\t";  //printf("%d\t", frame[n]);
+            }
+            cout<<"\n";
+                  }
+      }
+      total_miss = squence-miss ;
+      cout<<"total miss= " << total_miss;
+}
+
+
