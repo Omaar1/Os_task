@@ -12,64 +12,45 @@ void mfu();
 
 int frames=3 , pages = 7 , squence = 22;
 int* frameArray ;
-//int* squenceArray ;
-int squenceArray []={0,4,1,4,2,4,3,4,2,4,0,4,1,4,2,4,3,4};
+int* squenceArray ;
+//int squenceArray []={0,4,1,4,2,4,3,4,2,4,0,4,1,4,2,4,3,4};
 
 int main()
 {
+        int seed;
     cout << "Enter no. of Frames   :  "; cin>>frames ;
     cout << "Enter no. of Pages    :  "; cin>>pages ;
     cout << "Enter no. of sequence :  "; cin>>squence ;
+    cout << "Enter seed number :  "; cin>>seed ;
 
+    srand(seed);
 
     /// initialize arrays -->>
     frameArray = new int[frames];
     for(int i=0;i<frames ; i++) frameArray[i]=99;
 
-
-
-//    squenceArray = new int[squence];
-//for(int i=0;i<squence ; i++) squenceArray[i]= (rand()%pages);
-    cout<<"frame array :"; for(int i=0; i<frames ; i++) cout<<frameArray[i]<<"  "; cout<<endl;
+    squenceArray = new int[squence];
+    for(int i=0;i<squence ; i++) squenceArray[i]= ( rand( )%pages );
+    cout<<"\nframe array :"; for(int i=0; i<frames ; i++) cout<<frameArray[i]<<"  "; cout<<endl;
     cout<<"sequence array :"; for(int i=0;i<squence ; i++) cout<<squenceArray[i]<<"  "; cout<<"\n\n\n";
-    cout<<" \n\n\*\*\*\*\*\* Optimal method \*\*\*\*\*\*\n";
-    optimal();
+    int choice;
+    cout<<"\n Choose solution method : \n\n1-Optimal .\n2-First in First out .\n3-least freq. used .\n4-most freq. used .\n5- least recently used .\n6- Second Chance \n \n";
+    cin>>choice;
 
-
-    /// initialize arrays -->>
-    frameArray = new int[frames];
-    for(int i=0;i<frames ; i++) frameArray[i]=99;
-
-    cout<<" \n\n\*\*\*\*\*\* FIFO method \*\*\*\*\*\*\n";
-    fifo();
-
-    /// initialize arrays -->>
-    frameArray = new int[frames];
-    for(int i=0;i<frames ; i++) frameArray[i]=99;
-
-    cout<<" \n\n\*\*\*\*\*\* LRU method \*\*\*\*\*\*\n";
-    lru();
-
-
-    /// initialize arrays -->>
-    frameArray = new int[frames];
-    for(int i=0;i<frames ; i++) frameArray[i]=99;
-
-    cout<<" \n\n\*\*\*\*\*\* SecondChance method \*\*\*\*\*\*\n";
-    secondChance();
-
-      /// initialize arrays -->>
-    frameArray = new int[frames];
-    for(int i=0;i<frames ; i++) frameArray[i]=99;
-
-    cout<<" \n\n\*\*\*\*\*\* MFU method \*\*\*\*\*\*\n";
-    mfu();
+    if(choice==1) optimal();
+    else if(choice==2) fifo();
+    else if(choice==3) lfu();
+    else if(choice==4) mfu();
+    else if(choice==5) lru();
+    else if(choice==6) secondChance();
+    else cout<<"error !!";
     return 0;
 }
 
 
 ///First in First out
 void fifo(){
+    cout<<" \n\n\*\*\*\*\*\* FIFO method \*\*\*\*\*\*\n";
 
     int oldest=0 , missCount=0 , enter=0 , COUNTER=1 ,flag=0;
     do{
@@ -102,6 +83,8 @@ void fifo(){
 
 ///Optimal !
 void optimal(){
+        cout<<" \n\n\*\*\*\*\*\* Optimal method \*\*\*\*\*\*\n";
+
     int enter=0,flag=0,farIndex=-1,farNum=99,missCount=0,COUNTER=1 , j , toremove;
 
     do{
@@ -163,6 +146,8 @@ void optimal(){
 
 ///least recently used
 void lru(){
+        cout<<" \n\n\*\*\*\*\*\* LRU method \*\*\*\*\*\*\n";
+
     int enter=0 , flag=0,farIndex=99,farNum=99,missCount=0,COUNTER=1 , j , toremove;;
     do{
         for(int i=0;i<frames;i++){
@@ -213,6 +198,9 @@ void lru(){
 
 ///least frequently used
 void lfu(){
+
+        cout<<" \n\n\*\*\*\*\*\* LFU method \*\*\*\*\*\*\n";
+
     int miss=0;
     int m, n, page, flag, k, minimum_time, temp,total_miss;
     //............ intialize array that contain the number of times pages' numbers have been used !!
@@ -272,6 +260,8 @@ void lfu(){
 
 
 void secondChance( ){
+        cout<<" \n\n\*\*\*\*\*\* 2nd Chance method \*\*\*\*\*\*\n";
+
     int missCount=0,enter =0, COUNTER=1, index=0;
     int* flag ;
     flag = new int[frames];
@@ -321,6 +311,8 @@ void secondChance( ){
 
 
 void mfu(){
+    cout<<" \n\n\*\*\*\*\*\* MFU method \*\*\*\*\*\*\n";
+
     int miss=0;
     int m, n, page, flag, k, max_time, temp,total_miss,f;
     //intialize array that contain the number of times pages' numbers have been used !!
